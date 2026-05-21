@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CKD Health Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <main class="admin-container">
+        <section class="admin-wrapper">
+            <div class="admin-header">
+                <div>
+                    <a class="admin-home-link" href="{{ url_for('home') }}">Home</a>
+                    <a class="admin-home-link" href="/logout" data-logout-link>Logout</a>
+                    <p class="eyebrow">Admin Panel</p>
+                    <h1>Registered Users</h1>
+                    <p>View user account details registered on the CKD assessment site.</p>
+                </div>
+            </div>
+
+            <section class="admin-table-section">
+                <div class="table-header">
+                    <h2>User Details</h2>
+                    <form id="userSearchForm" class="user-search-form">
+                        <input id="userSearch" name="user_name" type="search" placeholder="Search users by name">
+                        <button type="submit">Search</button>
+                        <button type="button" id="clearSearch">Clear</button>
+                    </form>
+                </div>
+
+                <div id="userMessage" class="admin-notice"></div>
+
+                <div class="table-wrap">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.user_name }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.phno_no }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="empty-state">No users registered yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='auth.js') }}"></script>
+    <script src="{{ url_for('static', filename='admin.js') }}"></script>
+</body>
+</html>

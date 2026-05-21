@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - CKD Health Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="dashboard-container">
+        <section class="dashboard-wrapper">
+            <header class="dashboard-header">
+                <div>
+                    <p class="eyebrow">User Dashboard</p>
+                    <h1>Welcome Back</h1>
+                    <p>Choose where you want to go next in your CKD health assessment workspace.</p>
+                </div>
+                <a class="logout-btn" href="/logout" data-logout-link>Logout</a>
+            </header>
+
+            <section class="dashboard-actions" aria-label="Dashboard navigation">
+                <a class="dashboard-card" href="/form" data-protected-link>
+                    <span class="dashboard-card-icon">+</span>
+                    <span>
+                        <strong>New Assessment</strong>
+                        <small>Open the patient health assessment form.</small>
+                    </span>
+                </a>
+
+                <a class="dashboard-card" href="/history">
+                    <span class="dashboard-card-icon">H</span>
+                    <span>
+                        <strong>Assessment History</strong>
+                        <small>View your previous assessment records.</small>
+                    </span>
+                </a>
+
+                <a class="dashboard-card dashboard-card-danger" href="/logout" data-logout-link>
+                    <span class="dashboard-card-icon">X</span>
+                    <span>
+                        <strong>Logout</strong>
+                        <small>Sign out and return to the login page.</small>
+                    </span>
+                </a>
+            </section>
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='auth.js') }}"></script>
+</body>
+</html>

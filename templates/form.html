@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CKD Patient Health Assessment Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="form-wrapper">
+            <div class="form-header">
+                <a class="header-link" href="/dashboard" data-protected-link>Home</a>
+                <h1>Patient Health Assessment Form</h1>
+                <p>Please fill in all the required fields accurately</p>
+            </div>
+
+            <form id="healthForm" method="POST" action="/form">
+                <!-- Personal Information Section -->
+                <fieldset>
+                    <legend>Personal Information</legend>
+                    <div class="form-group">
+                        <label for="age">Age (years) <span class="required">*</span></label>
+                        <input type="number" id="age" name="age" min="0" max="150" required>
+                    </div>
+                </fieldset>
+
+                <!-- Vital Signs Section -->
+                <fieldset>
+                    <legend>Vital Signs</legend>
+                    <div class="form-group">
+                        <label for="bp">Blood Pressure (mm/Hg) <span class="required">*</span></label>
+                        <input type="number" id="bp" name="bp" min="0" max="300" placeholder="e.g., 120" required>
+                    </div>
+                </fieldset>
+
+                <!-- Urine Analysis Section -->
+                <fieldset>
+                    <legend>Urine Analysis</legend>
+                    <div class="form-group">
+                        <label for="sg">Specific Gravity <span class="required">*</span></label>
+                        <input type="number" id="sg" name="sg" min="1.000" max="1.030" step="0.001" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="al">Albumin <span class="required">*</span></label>
+                        <select id="al" name="al" required>
+                            <option value="">-- Select --</option>
+                            <option value="negative">Negative</option>
+                            <option value="trace">Trace</option>
+                            <option value="1+">1+</option>
+                            <option value="2+">2+</option>
+                            <option value="3+">3+</option>
+                            <option value="4+">4+</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="su">Sugar <span class="required">*</span></label>
+                        <select id="su" name="su" required>
+                            <option value="">-- Select --</option>
+                            <option value="negative">Negative</option>
+                            <option value="positive">Positive</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rbc">Red Blood Cells <span class="required">*</span></label>
+                        <select id="rbc" name="rbc" required>
+                            <option value="">-- Select --</option>
+                            <option value="normal">Normal</option>
+                            <option value="abnormal">Abnormal</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pc">Pus Cells <span class="required">*</span></label>
+                        <select id="pc" name="pc" required>
+                            <option value="">-- Select --</option>
+                            <option value="normal">Normal</option>
+                            <option value="abnormal">Abnormal</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pcc">Pus Cell Clumps <span class="required">*</span></label>
+                        <select id="pcc" name="pcc" required>
+                            <option value="">-- Select --</option>
+                            <option value="present">Present</option>
+                            <option value="notpresent">Not Present</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ba">Bacteria <span class="required">*</span></label>
+                        <select id="ba" name="ba" required>
+                            <option value="">-- Select --</option>
+                            <option value="present">Present</option>
+                            <option value="notpresent">Not Present</option>
+                        </select>
+                    </div>
+                </fieldset>
+
+                <!-- Blood Chemistry Section -->
+                <fieldset>
+                    <legend>Blood Chemistry</legend>
+                    <div class="form-group">
+                        <label for="bgr">Blood Glucose Random (mgs/dL) <span class="required">*</span></label>
+                        <input type="number" id="bgr" name="bgr" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bu">Blood Urea (mgs/dL) <span class="required">*</span></label>
+                        <input type="number" id="bu" name="bu" min="0" step="0.1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sc">Serum Creatinine (mgs/dL) <span class="required">*</span></label>
+                        <input type="number" id="sc" name="sc" min="0" step="0.1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sod">Sodium (mEq/L) <span class="required">*</span></label>
+                        <input type="number" id="sod" name="sod" min="0" step="0.1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pot">Potassium (mEq/L) <span class="required">*</span></label>
+                        <input type="number" id="pot" name="pot" min="0" step="0.1" required>
+                    </div>
+                </fieldset>
+
+                <!-- Blood Count Section -->
+                <fieldset>
+                    <legend>Blood Count</legend>
+                    <div class="form-group">
+                        <label for="hemo">Hemoglobin (gms) <span class="required">*</span></label>
+                        <input type="number" id="hemo" name="hemo" min="0" step="0.1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pcv">Packed Cell Volume <span class="required">*</span></label>
+                        <input type="number" id="pcv" name="pcv" min="0" max="100" step="0.1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="wc">White Blood Cells (cells/cmm) <span class="required">*</span></label>
+                        <input type="number" id="wc" name="wc" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rc">Red Blood Cells (millions/cmm) <span class="required">*</span></label>
+                        <input type="number" id="rc" name="rc" min="0" step="0.01" required>
+                    </div>
+                </fieldset>
+
+                <!-- Medical History Section -->
+                <fieldset>
+                    <legend>Medical History</legend>
+                    <div class="form-group">
+                        <label for="htn">Hypertension <span class="required">*</span></label>
+                        <select id="htn" name="htn" required>
+                            <option value="">-- Select --</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dm">Diabetes Mellitus <span class="required">*</span></label>
+                        <select id="dm" name="dm" required>
+                            <option value="">-- Select --</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cad">Coronary Artery Disease <span class="required">*</span></label>
+                        <select id="cad" name="cad" required>
+                            <option value="">-- Select --</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appet">Appetite <span class="required">*</span></label>
+                        <select id="appet" name="appet" required>
+                            <option value="">-- Select --</option>
+                            <option value="good">Good</option>
+                            <option value="poor">Poor</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pe">Pedal Edema <span class="required">*</span></label>
+                        <select id="pe" name="pe" required>
+                            <option value="">-- Select --</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ane">Anemia <span class="required">*</span></label>
+                        <select id="ane" name="ane" required>
+                            <option value="">-- Select --</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </fieldset>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <input type="hidden" name="classification" value="ckd">
+                    <a href="/dashboard" class="btn btn-secondary" data-protected-link>Return to Home</a>
+                    <button type="reset" class="btn btn-secondary">Clear Form</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+
+            <div id="successMessage" class="success-message" style="display: none;">
+                <p>✓ Form submitted successfully!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='form.js') }}"></script>
+    <script src="{{ url_for('static', filename='auth.js') }}"></script>
+</body>
+</html>

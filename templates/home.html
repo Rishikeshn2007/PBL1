@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CKD Health Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <main class="container">
+        <section class="home-wrapper">
+            <div class="home-hero">
+                <p class="eyebrow">Chronic Kidney Disease Screening Support</p>
+                <h1>CKD Health Assessment</h1>
+                <p>
+                    Use this site to enter patient health details and lab values in one organized form.
+                    The information should be taken from valid medical records or recent test reports.
+                </p>
+                <div class="home-actions">
+                    <a class="btn btn-primary" href="{{ url_for('login') }}">Login</a>
+                    <a class="btn btn-secondary" href="/dashboard" data-protected-link>Dashboard</a>
+                    <a class="btn btn-secondary" href="{{ url_for('register') }}">Registration</a>
+                    <a class="btn btn-secondary" href="/admin" data-protected-link>Admin</a>
+                </div>
+            </div>
+
+            <div class="home-content">
+                <section class="instruction-section">
+                    <h2>How to use this site</h2>
+                    <ol class="instruction-list">
+                        <li>Click <strong>Registration</strong> if you are a new user and create your account.</li>
+                        <li>Click <strong>Login</strong> if you already have an account.</li>
+                        <li>After login, open the patient assessment form.</li>
+                        <li>Enter the patient's age, blood pressure, urine test details, blood chemistry, blood count, and medical history.</li>
+                        <li>Use the exact values from reports where available, including units shown beside each field.</li>
+                        <li>Fill every field marked with a red star because these values are required before submission.</li>
+                        <li>Review the form once, then click <strong>Submit</strong>. Use <strong>Clear Form</strong> only when you want to remove all entered values.</li>
+                    </ol>
+                </section>
+
+                <section class="instruction-section note-section">
+                    <h2>Before you begin</h2>
+                    <ul class="check-list">
+                        <li>Keep the patient's blood and urine reports ready.</li>
+                        <li>Enter blood pressure in this format: 120/80.</li>
+                        <li>Select Yes or No carefully for medical history fields.</li>
+                        <li>This site is for assessment support and does not replace advice from a doctor.</li>
+                    </ul>
+                </section>
+            </div>
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='auth.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment History - CKD Health Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <main class="container">
+        <section class="history-wrapper">
+            <header class="history-header">
+                <a class="header-link" href="/dashboard">Back to Dashboard</a>
+                <h1>Assessment History</h1>
+                <p>Review your previous health assessment records and predictions.</p>
+            </header>
+
+            <div class="table-container">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Age</th>
+                            <th>BP</th>
+                            <th>Hemo</th>
+                            <th>Prediction</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in history %}
+                        <tr>
+                            <td>{{ record.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>{{ record.age }}</td>
+                            <td>{{ record.bp }}</td>
+                            <td>{{ record.hemo }}</td>
+                            <td>
+                                <span class="prediction-badge {{ 'badge-danger' if record.prediction == 'CKD' else 'badge-success' }}">
+                                    {{ record.prediction }}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn-view" onclick="alert('Full details: Age={{record.age}}, BP={{record.bp}}, Hemo={{record.hemo}}')">View Details</button>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="empty-state">No assessment history found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='auth.js') }}"></script>
+</body>
+</html>
