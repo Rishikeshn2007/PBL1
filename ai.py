@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import joblib
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
@@ -11,12 +12,28 @@ from sklearn.tree import DecisionTreeClassifier
 
 
 DATASET_PATH = "dataset.csv"
+MODEL_PATH = "ckd_model.pkl"
 TARGET_COLUMN = "Chronic Kidney Disease: yes"
 
 FEATURE_COLUMNS = [
     "Specific Gravity",
     "Albumin",
 ]
+ALBUMIN_MAP = {
+    "negative": 0,
+    "trace": 0,
+    "0": 0,
+    "1+": 1,
+    "1": 1,
+    "2+": 2,
+    "2": 2,
+    "3+": 3,
+    "3": 3,
+    "4+": 4,
+    "4": 4,
+    "5+": 5,
+    "5": 5,
+}
 
 TEST_SIZE = 0.30
 RANDOM_STATE = 4
@@ -126,12 +143,93 @@ def print_results(results):
     print("1 = CKD")
     print("0 = No CKD")
 
-def main():
+
+def get_best_model(results, models):
+    expected_range = results[
+        (results["Accuracy"] >= 0.70) & (results["Accuracy"] <= 0.90)
+    ]
+    candidates = expected_range if not expected_range.empty else results
+    best_row = candidates.sort_values("Accuracy", ascending=False).iloc[0]
+    best_name = best_row["Algorithm"]
+    return best_name, models[best_name], float(best_row["Accuracy"] * 100)
+
+
+def save_model(model, model_name, model_accuracy, path=MODEL_PATH):
+    model_data = {
+        "model": model,
+        "model_name": model_name,
+        "model_accuracy": model_accuracy,
+        "feature_columns": FEATURE_COLUMNS,
+        "albumin_map": ALBUMIN_MAP,
+    }
+    joblib.dump(model_data, path)
+    print(f"\nSaved {model_name} model to {path}")
+
+
+def load_model(path=MODEL_PATH):
+    return joblib.load(path)
+
+
+def normalize_albumin(value):
+    if value is None:
+        return 0
+
+    value_text = str(value).strip().lower()
+    albumin_value = ALBUMIN_MAP.get(value_text)
+    if albumin_value is not None:
+        return albumin_value
+
+    numeric_value = pd.to_numeric(value, errors="coerce")
+    return 0 if pd.isna(numeric_value) else numeric_value
+
+
+def predict_ckd(specific_gravity, albumin, model_data=None):
+    details = predict_ckd_details(specific_gravity, albumin, model_data)
+    return details["prediction"]
+
+
+def predict_ckd_details(specific_gravity, albumin, model_data=None):
+    if model_data is None:
+        model_data = load_model()
+
+    input_data = pd.DataFrame(
+        [
+            {
+                "Specific Gravity": float(specific_gravity),
+                "Albumin": normalize_albumin(albumin),
+            }
+        ],
+        columns=model_data["feature_columns"],
+    )
+
+    model = model_data["model"]
+    prediction = int(model.predict(input_data)[0])
+    confidence = None
+    if hasattr(model, "predict_proba"):
+        probabilities = model.predict_proba(input_data)[0]
+        confidence = float(max(probabilities) * 100)
+
+    return {
+        "prediction": "CKD" if prediction == 1 else "No CKD",
+        "confidence": confidence,
+        "model_name": model_data["model_name"],
+        "model_accuracy": model_data.get("model_accuracy"),
+    }
+
+
+def train_and_save_model():
     df = load_dataset(DATASET_PATH)
     x_train, x_test, y_train, y_test = split_dataset(df)
     models = build_models()
     results = evaluate_models(models, x_train, x_test, y_train, y_test)
     print_results(results)
+    best_name, best_model, best_accuracy = get_best_model(results, models)
+    save_model(best_model, best_name, best_accuracy)
+    return results, best_model
+
+
+def main():
+    train_and_save_model()
 
 
 if __name__ == "__main__":

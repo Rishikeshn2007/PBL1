@@ -35,7 +35,7 @@ class User(db.Model):
         new_ckd = CKDData(user_id=self.id, **data)
         db.session.add(new_ckd)
         db.session.commit()
-        return True
+        return new_ckd
 
 class CKDData(db.Model):
     __tablename__ = 'ckd_data'
@@ -67,9 +67,11 @@ class CKDData(db.Model):
     appet = db.Column(db.String(20))
     pe = db.Column(db.String(20))
     ane = db.Column(db.String(20))
+    prediction_result = db.Column(db.String(20))
+    prediction_confidence = db.Column(db.Float)
 
     @property
     def prediction(self):
-        if self.hemo and self.hemo < 12:
-            return "CKD"
-        return "Not CKD"
+        if self.prediction_result:
+            return self.prediction_result
+        return "No prediction"

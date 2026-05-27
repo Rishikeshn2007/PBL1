@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result - CKD Health Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="container">
+        <section class="result-wrapper">
+            <header class="result-header">
+                <a class="header-link" href="/dashboard" data-protected-link>Back to Dashboard</a>
+                <h1>Prediction Result</h1>
+                <p>Report #{{ record.id }} · {{ record.timestamp.strftime('%Y-%m-%d %H:%M') }}</p>
+            </header>
+
+            <section class="result-summary {{ 'result-danger' if record.prediction == 'CKD' else 'result-success' }}">
+                <p class="eyebrow">Model Prediction</p>
+                <h2>{{ record.prediction }}</h2>
+                <div class="result-metrics">
+                    <div>
+                        <span>Confidence</span>
+                        <strong>
+                            {% if record.prediction_confidence is not none %}
+                                {{ "%.2f"|format(record.prediction_confidence) }}%
+                            {% else %}
+                                Not available
+                            {% endif %}
+                        </strong>
+                    </div>
+                    <div>
+                        <span>Model Accuracy</span>
+                        <strong>
+                            {% if model_accuracy is not none %}
+                                {{ "%.2f"|format(model_accuracy) }}%
+                            {% else %}
+                                Not available
+                            {% endif %}
+                        </strong>
+                    </div>
+                    <div>
+                        <span>Algorithm</span>
+                        <strong>{{ model_name }}</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="warning-panel">
+                <strong>Important medical warning</strong>
+                <p>This prediction is not permanent and is not a medical diagnosis. Please contact a qualified doctor for proper testing, confirmation, and treatment advice.</p>
+            </section>
+
+            <section class="next-steps">
+                <h2>What to do next</h2>
+                <ul>
+                    {% for step in next_steps %}
+                    <li>{{ step }}</li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+            <div class="result-actions">
+                <a class="btn btn-primary" href="/form" data-protected-link>New Assessment</a>
+                <a class="btn btn-secondary" href="/history">View History</a>
+            </div>
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='auth.js') }}"></script>
+</body>
+</html>

@@ -7,55 +7,95 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="flash-messages">
-          {% for category, message in messages %}
-            <div class="alert alert-{{ category }}">{{ message }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
-
-    <main class="container">
+    <main class="container history-page-container">
         <section class="history-wrapper">
             <header class="history-header">
                 <a class="header-link" href="/dashboard">Back to Dashboard</a>
                 <h1>Assessment History</h1>
-                <p>Review your previous health assessment records and predictions.</p>
+                <p>All saved medical reports and prediction results.</p>
             </header>
 
-            <div class="table-container">
+            <div class="table-container full-history-table">
                 <table class="history-table">
                     <thead>
                         <tr>
-                            <th>Date</th>
+                            <th>Report</th>
+                            <th>Date & Time</th>
+                            <th>Prediction</th>
+                            <th>Confidence</th>
                             <th>Age</th>
                             <th>BP</th>
+                            <th>SG</th>
+                            <th>Albumin</th>
+                            <th>Sugar</th>
+                            <th>RBC</th>
+                            <th>PC</th>
+                            <th>PCC</th>
+                            <th>Bacteria</th>
+                            <th>BGR</th>
+                            <th>BU</th>
+                            <th>SC</th>
+                            <th>Sodium</th>
+                            <th>Potassium</th>
                             <th>Hemo</th>
-                            <th>Prediction</th>
+                            <th>PCV</th>
+                            <th>WC</th>
+                            <th>RC</th>
+                            <th>HTN</th>
+                            <th>DM</th>
+                            <th>CAD</th>
+                            <th>Appetite</th>
+                            <th>PE</th>
+                            <th>Anemia</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for record in history %}
                         <tr>
+                            <td>#{{ record.id }}</td>
                             <td>{{ record.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
-                            <td>{{ record.age }}</td>
-                            <td>{{ record.bp }}</td>
-                            <td>{{ record.hemo }}</td>
                             <td>
                                 <span class="prediction-badge {{ 'badge-danger' if record.prediction == 'CKD' else 'badge-success' }}">
                                     {{ record.prediction }}
                                 </span>
                             </td>
                             <td>
-                                <button class="btn-view" onclick="alert('Full details: Age={{record.age}}, BP={{record.bp}}, Hemo={{record.hemo}}')">View Details</button>
+                                {% if record.prediction_confidence is not none %}
+                                    {{ "%.2f"|format(record.prediction_confidence) }}%
+                                {% else %}
+                                    -
+                                {% endif %}
                             </td>
+                            <td>{{ record.age }}</td>
+                            <td>{{ record.bp }}</td>
+                            <td>{{ record.sg }}</td>
+                            <td>{{ record.al }}</td>
+                            <td>{{ record.su }}</td>
+                            <td>{{ record.rbc }}</td>
+                            <td>{{ record.pc }}</td>
+                            <td>{{ record.pcc }}</td>
+                            <td>{{ record.ba }}</td>
+                            <td>{{ record.bgr }}</td>
+                            <td>{{ record.bu }}</td>
+                            <td>{{ record.sc }}</td>
+                            <td>{{ record.sod }}</td>
+                            <td>{{ record.pot }}</td>
+                            <td>{{ record.hemo }}</td>
+                            <td>{{ record.pcv }}</td>
+                            <td>{{ record.wc }}</td>
+                            <td>{{ record.rc }}</td>
+                            <td>{{ record.htn }}</td>
+                            <td>{{ record.dm }}</td>
+                            <td>{{ record.cad }}</td>
+                            <td>{{ record.appet }}</td>
+                            <td>{{ record.pe }}</td>
+                            <td>{{ record.ane }}</td>
+                            <td><a class="btn-view" href="{{ url_for('result', record_id=record.id) }}">View Report</a></td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="6" class="empty-state">No assessment history found.</td>
+                            <td colspan="29" class="empty-state">No assessment history found.</td>
                         </tr>
                         {% endfor %}
                     </tbody>

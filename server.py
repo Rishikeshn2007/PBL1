@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, make_response
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies, unset_jwt_cookies
 from modules import db, User, CKDData
+from sqlalchemy import text
+from ai import MODEL_PATH, load_model, predict_ckd_details, train_and_save_model
 import os
 import mimetypes
 
@@ -19,8 +21,36 @@ app.config['JWT_ACCESS_COOKIE_PATH'] = '/'
 db.init_app(app)
 jwt = JWTManager(app)
 
+
+def ensure_ckd_data_columns():
+    columns = db.session.execute(text("PRAGMA table_info(ckd_data)")).fetchall()
+    column_names = {column[1] for column in columns}
+    if "prediction_result" not in column_names:
+        db.session.execute(
+            text("ALTER TABLE ckd_data ADD COLUMN prediction_result VARCHAR(20)")
+        )
+    if "prediction_confidence" not in column_names:
+        db.session.execute(
+            text("ALTER TABLE ckd_data ADD COLUMN prediction_confidence FLOAT")
+        )
+    db.session.commit()
+
+
+def ensure_model_file():
+    if not os.path.exists(MODEL_PATH):
+        train_and_save_model()
+    model_data = load_model()
+    if "model_accuracy" not in model_data:
+        train_and_save_model()
+        model_data = load_model()
+    return model_data
+
+
 with app.app_context():
     db.create_all()
+    ensure_ckd_data_columns()
+
+CKD_MODEL_DATA = ensure_model_file()
 
 
 @app.route('/')
@@ -94,6 +124,44 @@ def history():
     records = CKDData.query.filter_by(user_id=int(user_id)).order_by(CKDData.timestamp.desc()).all()
     return render_template('history.html', user=user, history=records)
 
+@app.route('/result/<int:record_id>')
+@jwt_required()
+def result(record_id):
+    user_id = get_jwt_identity()
+    user = db.session.get(User, int(user_id))
+    if not user:
+        resp = make_response(redirect(url_for('login')))
+        unset_jwt_cookies(resp)
+        return resp
+
+    record = CKDData.query.filter_by(id=record_id, user_id=int(user_id)).first_or_404()
+    model_accuracy = CKD_MODEL_DATA.get('model_accuracy')
+    next_steps = get_next_steps(record.prediction)
+    return render_template(
+        'result.html',
+        user=user,
+        record=record,
+        model_name=CKD_MODEL_DATA.get('model_name'),
+        model_accuracy=model_accuracy,
+        next_steps=next_steps,
+    )
+
+
+def get_next_steps(prediction):
+    if prediction == 'CKD':
+        return [
+            'Book an appointment with a nephrologist or physician for proper clinical evaluation.',
+            'Carry this report and ask about confirmatory tests such as urine albumin, eGFR, creatinine, and blood pressure review.',
+            'Avoid self-medicating painkillers or kidney-related medicines without medical advice.',
+            'Keep hydrated as advised by your doctor and monitor blood pressure and sugar if applicable.',
+        ]
+
+    return [
+        'Keep regular health checkups, especially if you have diabetes, hypertension, or family history of kidney disease.',
+        'Maintain healthy blood pressure, blood sugar, hydration, sleep, and diet habits.',
+        'Repeat testing if symptoms continue or if a doctor recommends follow-up kidney function tests.',
+    ]
+
 
 @app.route('/form', methods=['GET', 'POST'])
 @jwt_required()
@@ -122,9 +190,12 @@ def form():
             else:
                 data[p] = val
 
-        user.update_ckd_parameters(data)
-        flash('CKD parameters saved successfully!', 'success')
-        return redirect(url_for('history'))
+        prediction_details = predict_ckd_details(data.get('sg'), data.get('al'), CKD_MODEL_DATA)
+        data['prediction_result'] = prediction_details['prediction']
+        data['prediction_confidence'] = prediction_details['confidence']
+
+        record = user.update_ckd_parameters(data)
+        return redirect(url_for('result', record_id=record.id))
 
     return render_template('form.html', ckd_data=user.ckd_data)
 
