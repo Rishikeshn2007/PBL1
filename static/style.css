@@ -18,15 +18,23 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+html {
+    width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     background: var(--bg-gradient);
     color: var(--text-color);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .container {
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
@@ -59,10 +67,13 @@ body {
     font-size: 2rem;
     color: var(--text-color);
     margin-bottom: 0.5rem;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
 }
 
 .form-header p {
     color: var(--light-text);
+    line-height: 1.5;
 }
 
 .form-group {
@@ -78,6 +89,7 @@ body {
 
 .form-group input, .form-group select {
     width: 100%;
+    min-width: 0;
     padding: 0.8rem 1rem;
     border: 2px solid #e9ecef;
     border-radius: 0.75rem;
@@ -102,6 +114,8 @@ body {
     text-decoration: none;
     border: none;
     width: 100%;
+    min-height: 44px;
+    line-height: 1.25;
 }
 
 .btn-primary {
@@ -125,6 +139,7 @@ body {
 
 /* Home Hero */
 .home-wrapper {
+    width: 100%;
     max-width: 900px;
     margin: 4rem auto;
     background: white;
@@ -150,6 +165,8 @@ body {
 .home-hero h1 {
     font-size: 3rem;
     margin-bottom: 1.5rem;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
 }
 
 .home-actions {
@@ -165,10 +182,12 @@ body {
 
 /* Dashboard */
 .dashboard-container {
+    width: 100%;
     padding: 2rem;
 }
 
 .dashboard-wrapper {
+    width: 100%;
     max-width: 1000px;
     margin: 0 auto;
 }
@@ -178,11 +197,12 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 3rem;
+    gap: 1rem;
 }
 
 .dashboard-actions {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
     gap: 2rem;
 }
 
@@ -197,6 +217,17 @@ body {
     gap: 1.5rem;
     transition: var(--transition);
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    min-width: 0;
+}
+
+.dashboard-card span:last-child {
+    min-width: 0;
+}
+
+.dashboard-card strong,
+.dashboard-card small {
+    display: block;
+    overflow-wrap: anywhere;
 }
 
 .dashboard-card:hover {
@@ -205,6 +236,7 @@ body {
 }
 
 .dashboard-card-icon {
+    flex: 0 0 60px;
     width: 60px;
     height: 60px;
     background: rgba(67, 97, 238, 0.1);
@@ -224,6 +256,7 @@ body {
 
 /* Form Styles */
 .form-wrapper {
+    width: 100%;
     background: white;
     padding: 3rem;
     border-radius: 2rem;
@@ -252,6 +285,12 @@ legend {
 .form-actions {
     display: flex;
     gap: 1rem;
+    align-items: stretch;
+}
+
+.form-actions .btn,
+.form-actions button {
+    flex: 1 1 0;
 }
 
 /* Flash Messages */
@@ -273,10 +312,12 @@ legend {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    max-width: calc(100vw - 40px);
 }
 
 /* History Page */
 .history-wrapper {
+    width: 100%;
     max-width: 1100px;
     margin: 3rem auto;
     padding: 0 1rem;
@@ -289,6 +330,8 @@ legend {
 .history-header h1 {
     font-size: 2.5rem;
     margin: 0.5rem 0;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
 }
 
 .history-header p {
@@ -313,10 +356,12 @@ legend {
     border-radius: 1.5rem;
     box-shadow: var(--card-shadow);
     overflow: hidden;
+    width: 100%;
 }
 
 .full-history-table {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .history-table {
@@ -389,6 +434,7 @@ legend {
     font-size: 0.85rem;
     text-decoration: none;
     transition: var(--transition);
+    white-space: nowrap;
 }
 
 .btn-view:hover {
@@ -405,6 +451,7 @@ legend {
 
 /* Prediction Result */
 .result-wrapper {
+    width: 100%;
     max-width: 950px;
     margin: 3rem auto;
 }
@@ -416,10 +463,14 @@ legend {
 .result-header h1 {
     font-size: 2.5rem;
     margin: 0.5rem 0;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
 }
 
 .result-header p {
     color: var(--light-text);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
 }
 
 .result-summary,
@@ -447,6 +498,8 @@ legend {
 .result-summary h2 {
     font-size: 3rem;
     margin-bottom: 1.5rem;
+    line-height: 1.05;
+    overflow-wrap: anywhere;
 }
 
 .result-danger h2 {
@@ -459,7 +512,7 @@ legend {
 
 .result-metrics {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
     gap: 1rem;
 }
 
@@ -467,6 +520,7 @@ legend {
     border: 1px solid #e9ecef;
     border-radius: 0.75rem;
     padding: 1rem;
+    min-width: 0;
 }
 
 .result-metrics span {
@@ -478,6 +532,7 @@ legend {
 
 .result-metrics strong {
     font-size: 1.25rem;
+    overflow-wrap: anywhere;
 }
 
 .warning-panel {
@@ -510,18 +565,22 @@ legend {
 .result-actions {
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .result-actions .btn {
     width: auto;
+    flex: 1 1 180px;
 }
 
 /* Admin Table */
 .admin-container {
+    width: 100%;
     padding: 2rem;
 }
 
 .admin-wrapper {
+    width: 100%;
     max-width: 1100px;
     margin: 0 auto;
 }
@@ -580,10 +639,12 @@ legend {
 
 .table-wrap {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .user-table {
     width: 100%;
+    min-width: 680px;
     border-collapse: collapse;
 }
 
@@ -614,6 +675,7 @@ legend {
     text-decoration: none;
     font-weight: 600;
     transition: var(--transition);
+    white-space: nowrap;
 }
 
 .logout-btn:hover {
@@ -621,18 +683,119 @@ legend {
     color: white;
 }
 
+@media (max-width: 900px) {
+    .container,
+    .dashboard-container,
+    .admin-container {
+        padding: 1.25rem;
+    }
+
+    .home-wrapper,
+    .form-wrapper,
+    .auth-wrapper,
+    .admin-table-section {
+        border-radius: 1.25rem;
+        padding: 2rem;
+    }
+
+    .home-wrapper {
+        margin: 2rem auto;
+    }
+
+    .home-hero h1 {
+        font-size: 2.4rem;
+    }
+
+    .dashboard-header {
+        align-items: flex-start;
+        flex-direction: column;
+        margin-bottom: 2rem;
+    }
+
+    .logout-btn {
+        align-self: flex-start;
+    }
+
+    .dashboard-actions {
+        gap: 1rem;
+    }
+
+    .dashboard-card {
+        padding: 1.5rem;
+    }
+
+    .history-wrapper,
+    .result-wrapper {
+        margin: 2rem auto;
+        padding: 0;
+    }
+
+    .full-history-table .history-table {
+        min-width: 2000px;
+    }
+}
+
 @media (max-width: 700px) {
     .container,
-    .dashboard-container {
+    .dashboard-container,
+    .admin-container {
         padding: 1rem;
     }
 
+    .auth-container {
+        align-items: flex-start;
+        padding: 1rem;
+    }
+
+    .auth-wrapper,
+    .home-wrapper,
     .result-summary,
     .warning-panel,
     .next-steps,
-    .form-wrapper {
+    .form-wrapper,
+    .admin-table-section {
         padding: 1.25rem;
         border-radius: 1rem;
+    }
+
+    .home-wrapper {
+        margin: 1rem auto;
+    }
+
+    .home-hero {
+        margin-bottom: 2rem;
+    }
+
+    .home-hero h1 {
+        font-size: 2rem;
+    }
+
+    .home-actions,
+    .user-search-form {
+        flex-direction: column;
+    }
+
+    .home-actions .btn,
+    .user-search-form button,
+    .user-search-form input {
+        width: 100%;
+    }
+
+    .form-header h1 {
+        font-size: 1.65rem;
+    }
+
+    fieldset {
+        margin-bottom: 1.75rem;
+    }
+
+    legend {
+        font-size: 1.05rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
     }
 
     .result-summary h2,
@@ -641,12 +804,108 @@ legend {
         font-size: 2rem;
     }
 
+    .result-metrics {
+        grid-template-columns: 1fr;
+    }
+
     .result-actions,
     .form-actions {
         flex-direction: column;
     }
 
-    .result-actions .btn {
+    .result-actions .btn,
+    .form-actions .btn,
+    .form-actions button {
         width: 100%;
+        flex: none;
+    }
+
+    .dashboard-card {
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1.25rem;
+    }
+
+    .dashboard-card-icon {
+        flex-basis: 48px;
+        width: 48px;
+        height: 48px;
+        border-radius: 0.8rem;
+        font-size: 1.2rem;
+    }
+
+    .history-header,
+    .result-header {
+        margin-bottom: 1.25rem;
+    }
+
+    .history-table th,
+    .history-table td {
+        padding: 0.85rem 1rem;
+    }
+
+    .flash-messages {
+        top: 12px;
+        right: 12px;
+        left: 12px;
+        min-width: 0;
+        max-width: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .container,
+    .dashboard-container,
+    .admin-container {
+        padding: 0.75rem;
+    }
+
+    .auth-wrapper,
+    .home-wrapper,
+    .form-wrapper,
+    .result-summary,
+    .warning-panel,
+    .next-steps,
+    .admin-table-section {
+        padding: 1rem;
+        border-radius: 0.9rem;
+    }
+
+    .form-header h1,
+    .home-hero h1,
+    .result-header h1,
+    .history-header h1 {
+        font-size: 1.65rem;
+    }
+
+    .result-summary h2 {
+        font-size: 1.9rem;
+    }
+
+    .dashboard-card {
+        flex-direction: column;
+    }
+
+    .dashboard-card-icon {
+        flex-basis: auto;
+    }
+
+    .btn,
+    .form-group input,
+    .form-group select {
+        font-size: 0.95rem;
+    }
+
+    .prediction-badge,
+    .btn-view {
+        font-size: 0.75rem;
+    }
+
+    .full-history-table {
+        border-radius: 0.9rem;
+    }
+
+    .full-history-table .history-table {
+        min-width: 1800px;
     }
 }
